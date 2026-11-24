@@ -36,6 +36,8 @@ def check(text):
         return "entry has leading or trailing whitespace"
     if "\n" in text or "\r" in text:
         return "entry must be a single line"
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in text):
+        return "entry contains a control character"
     return None
 
 
@@ -57,6 +59,7 @@ def self_test():
         (" padded", "leading whitespace"),
         ("padded ", "trailing whitespace"),
         ("a\rb", "carriage return"),
+        ("a\x00b", "control character"),
     ]
     for text, label in reject:
         error = check(text)
